@@ -6,7 +6,6 @@
 - Hà Trung Dũng 22010433
 
 ## Chức năng:
-
 ### 1. Lưu trữ và quản lý nhiều ví:
 - Chức năng lưu trữ ví sẽ cho phép người dùng tạo và lưu trữ các ví điện tử. Mỗi ví sẽ bao gồm một cặp khóa (public và private key) giúp bảo vệ tài khoản và các giao dịch của người dùng.
 - Khi người dùng tạo ví mới, một cặp khóa được tạo tự động và lưu trữ trong hệ thống.
