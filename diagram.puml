@@ -1,5 +1,13 @@
 @startuml
 
+' Set default style for all classes
+skinparam classAttributeIconSize 16
+skinparam classFontSize 14
+skinparam classArrowColor #0000ff
+skinparam classBackgroundColor #f9f9f9
+skinparam classBorderColor #333333
+
+' Define KeyPair class
 class KeyPair {
     +String public
     +String private
@@ -7,26 +15,23 @@ class KeyPair {
     +static generate(): KeyPair
 }
 
+' Define Network class (can be expanded later)
 class Network {
     ' This class is empty for now, but can be extended in the future.
 }
 
+' Define Wallet class
 class Wallet {
     +KeyPair keyPair
     +Wallet(keyPair: KeyPair)
 }
 
-class WalletManager {
-    +List<Wallet> wallets
-    +void createWallet()
-    +void importPrivateKey(privateKey: String)
-    +void sendTransaction(sender: Wallet, receiver: Wallet, amount: double)
-}
-
+' Define TransactionSigner class
 class TransactionSigner {
     +String signTransaction(message: String, privateKey: String): String
 }
 
+' Define Transaction class
 class Transaction {
     +Wallet sender
     +Wallet receiver
@@ -39,11 +44,19 @@ class Transaction {
     +_generateTxId(): String
 }
 
-' Relationships
-WalletManager --> "1..*" Wallet : manages
-Wallet --> KeyPair : contains
-WalletManager --> Transaction : creates
-TransactionSigner --> Transaction : signs
-Transaction --> Wallet : involves
+' Define WalletManager class
+class WalletManager {
+    +List<Wallet> wallets
+    +void createWallet()
+    +void importPrivateKey(privateKey: String)
+    +void sendTransaction(sender: Wallet, receiver: Wallet, amount: double)
+}
+
+' Relationships between classes
+WalletManager "1" --> "*" Wallet : Manages
+Wallet "1" --> "1" KeyPair : Contains
+WalletManager "1" --> "*" Transaction : Creates
+TransactionSigner "1" --> "*" Transaction : Signs
+Transaction "1" --> "1" Wallet : Involves
 
 @enduml
