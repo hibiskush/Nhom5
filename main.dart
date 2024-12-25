@@ -1,3 +1,11 @@
+import 'dart:math';
+String _generateRandomString(int length) {
+  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  Random rng = Random();
+  return List.generate(length, (index) => chars[rng.nextInt(chars.length)]).join();
+}
+
+
 class KeyPair {
   String public;
   String private;
@@ -5,7 +13,9 @@ class KeyPair {
   KeyPair({required this.public, required this.private});
 
   static KeyPair generate() {
-    return KeyPair(public: 'publicKey', private: 'privateKey');
+    String publicKey = _generateRandomString(32);  
+    String privateKey = _generateRandomString(64);
+    return KeyPair(public: publicKey, private: privateKey);
   }
 }
 
@@ -56,11 +66,25 @@ class Transaction {
   String signature = '';
   String signDate = '';
   double amount;
+  String txId = '';
 
-  Transaction({required this.sender, required this.receiver, required this.amount, this.signature = '', this.signDate = ''});
+  Transaction({required this.sender, required this.receiver, required this.amount, this.signature = '', this.signDate = ''}) {
+    txId = _generateTxId();
+  }
 
   void showTransaction() {
-    print('Transaction from ${sender.keyPair.public} to ${receiver.keyPair.public} with amount $amount');
+    print('Transaction ID: $txId');
+    print('From: $sender');
+    print('To: $receiver');
+    print('Amount: \$${amount}');
+    print('Signature: $signature');
+    print('Date: $signDate');
+  }
+
+  String _generateTxId() {
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    String randomString = _generateRandomString(8); 
+    return '$timestamp-$randomString';
   }
 }
 
@@ -71,5 +95,4 @@ void main() {
   Wallet sender = walletManager.wallets[0];
   Wallet receiver = Wallet(keyPair: KeyPair(public: 'receiverPublicKey', private: ''));
   walletManager.sendTransaction(sender, receiver, 10.0);
-  
 }
