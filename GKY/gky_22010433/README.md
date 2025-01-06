@@ -14,6 +14,9 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+##Anh
+
+## code chính 
 ```
 import 'dart:math'; // Để tạo màu ngẫu nhiên
 import 'package:flutter/material.dart';
@@ -120,4 +123,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
+![Image](<<img width="297" alt="Ảnh màn hình 2025-01-06 lúc 15 17 41" src="https://github.com/user-attachments/assets/bd45dd0b-b238-40b5-885b-8149cd2021e5" />
+>)
