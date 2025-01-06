@@ -35,7 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
     User(username: 'Minh', password: '123', role: 'Admin'),
     User(username: 'Duong', password: '3445', role: 'User'),
     User(username: 'Dung', password: '22c', role: 'User'),
-    User(username: 'Anon', password: 'None', role: 'Guess'),
+    User(username: 'Anon1', password: 'None', role: 'Guess'),
+    User(username: 'Anon2', password: 'None', role: 'Guess'),
   ];
 
   @override
