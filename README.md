@@ -27,6 +27,7 @@
 
 
 ## Structural Diagram:
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/hibiskush/Nhom5/refs/heads/main/diagram.puml)
+![Class Diagram](<img width="978" alt="Ảnh màn hình 2025-02-17 lúc 14 21 07" src="https://github.com/user-attachments/assets/0ff901ef-224a-497a-95f9-98be1adfcdd4" />
+)
 
 
