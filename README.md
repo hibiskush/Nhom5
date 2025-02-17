@@ -27,6 +27,6 @@
 
 
 ## Structural Diagram:
-![Class Diagram]<img width="978" alt="Ảnh màn hình 2025-02-17 lúc 14 21 07" src="https://github.com/user-attachments/assets/0ff901ef-224a-497a-95f9-98be1adfcdd4" />
+[Class Diagram]<img width="978" alt="Ảnh màn hình 2025-02-17 lúc 14 21 07" src="https://github.com/user-attachments/assets/0ff901ef-224a-497a-95f9-98be1adfcdd4" />
 
 
