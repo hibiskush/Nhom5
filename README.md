@@ -26,7 +26,7 @@
 - Các ví chỉ có thể thực hiện giao dịch khi người dùng có quyền truy cập vào khóa riêng của ví đó.
 
 
-## Structural Diagram:
-[Class Diagram]<img width="978" alt="Ảnh màn hình 2025-02-17 lúc 14 21 07" src="https://github.com/user-attachments/assets/0ff901ef-224a-497a-95f9-98be1adfcdd4" />
+## UML Diagram:
+<img width="978" alt="UML" src="https://uml.planttext.com/plantuml/png/bLPDRzim3Bq7o7yGV78nPpli5Wpz2hOkM0_3kg67OGTLPceXjkH9ShQWw7yV9Tkn9DihcW298lAHV7mIdKjjg39DLIuNUiz5JHMjICa5c6CDH2fJoEN2lbb9jIRtj2p1aAVbWk1hHMYUAz1wJUwCukAntwuLFr03N-0OMy0KeAugsGYp9hbi7aheJU7lzlDDbp4T8cQaHY_ES7dMEnqapyaE32kkQKa5WtJ2z5Ln1fk2YiVON4gQVrTKQCeCbq9Ry_D0sZCDp7TALkkkkdxFo7Y7Tan5K_LRET88kzBNukL9RVWC0sPTYCpX9bZTKFq985N0W1z0PRR3RNz3Pmt2vpW3y5Xl91StmFRo3jG1E-U9NlC9PPMK9jvxe1f-g3BUBe3ce7J8FiutQDGUYmlo26QZZhMHJicKkVKspmXhb0B1ZYyWEkqdSTDoZwZF468b1ojpOKpzTkD-p4hRqtlod2-w2C-XPam1YkwhPeRroVMMQ_F1SpgtjFtZV7syG_51fTfzlGRu3HYlRMNslBIhry2lsl6GTcCYxFD7EmgWgKPDLZMREZJOhirSdzrWwQttyF0-DBA2Sh7DruJ7maH5f6tkpCjs5hYsDyKoxIVDm6ti1jhm2YNiBcdR_umCTu-6DxLbFBghU0voh8JJKcVanI0USYjsKc41kBo8r4dDtyzK5oVKTIdPtlEtxhTOkZRE4arCLaeDfp6Pj4Cl8QlLEKcy90aEzQGznVhTxmOK1vsWV-0IWpef75RJ0sWSWqcS99uMpjiDHFIlxMqVGIAf7QAh2U-r4zDYHcuEt4T2J5FRKHnWndocabdbD3bmEfzcr3ifTbnLSTFcGGEdn2eJtx7LpuBdU9P-DJKY-sTLzrG_6NFvHw0vxl7OqKM9Sio6yyfSBlndwdySJp4dXd9OHH1zkRZ4NkE_cdy0" />
 
 
