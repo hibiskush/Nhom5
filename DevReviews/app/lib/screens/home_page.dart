@@ -1,4 +1,4 @@
-import 'package:dmm/screens/screens.dart';
+import 'package:wallet/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 

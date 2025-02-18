@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dmm/widgets/token_card.dart';
+import 'package:flutter/services.dart';
+
+
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,156 +45,154 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Nút Nhận
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ReceiveScreen()),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange[100],
-                            shape: BoxShape.circle,
-                          ),
-                          padding: EdgeInsets.all(12), // Kích thước padding cân bằng
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.orange,
-                            size: 24, // Kích thước icon nhỏ hơn
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Nhận',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    // Nút Nhận
+    Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ReceiveScreen()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              shape: BoxShape.circle,
+            ),
+            padding: EdgeInsets.all(12), // Kích thước padding cân bằng
+            child: Icon(
+              Icons.arrow_downward,
+              color: Colors.orange,
+              size: 24, // Kích thước icon nhỏ hơn
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Nhận',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    ),
 
-                  // Nút Gửi
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SendScreen()),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange[100],
-                            shape: BoxShape.circle,
-                          ),
-                          padding: EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.orange,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      
-                      SizedBox(height: 8),
-                      Text(
-                        'Gửi',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
+    // Nút Gửi
+    Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SendScreen()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              shape: BoxShape.circle,
+            ),
+            padding: EdgeInsets.all(12),
+            child: Icon(
+              Icons.arrow_upward,
+              color: Colors.orange,
+              size: 24,
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Gửi',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    ),
 
-                  // Nút Đổi
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SwapScreen()),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange[100],
-                            shape: BoxShape.circle,
-                          ),
-                          padding: EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.swap_horiz,
-                            color: Colors.orange,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Đổi',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
+    // Nút Đổi
+    Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SwapScreen()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              shape: BoxShape.circle,
+            ),
+            padding: EdgeInsets.all(12),
+            child: Icon(
+              Icons.swap_horiz,
+              color: Colors.orange,
+              size: 24,
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Đổi',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    ),
 
-                  // Nút Mua
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => BuyAndSellScreen()),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange[100],
-                            shape: BoxShape.circle,
-                          ),
-                          padding: EdgeInsets.all(12),
-                          child: Icon(
-                            Icons.shopping_cart,
-                            color: Colors.orange,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Mua',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    // Nút Mua
+    Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => BuyAndSellScreen()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              shape: BoxShape.circle,
+            ),
+            padding: EdgeInsets.all(12),
+            child: Icon(
+              Icons.shopping_cart,
+              color: Colors.orange,
+              size: 24,
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Mua',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    ),
+  ],
+),
+
             ],
           ),
         ),
         SizedBox(height: 12),
-        
-        //token balance
         Expanded(
           child: Container(
             color: Colors.white,
@@ -459,7 +461,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingTokens() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -485,7 +487,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingSites() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -511,7 +513,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingCollections() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -537,7 +539,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildLearn() {
-    return Container(
+    return SizedBox(
       height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -568,7 +570,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildQuest() {
-    return Container(
+    return SizedBox(
       height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -772,51 +774,59 @@ class ReceiveScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 16),
-            Text(
-              "Quét mã QR để nhận tiền",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Container(
-              height: 200,
-              width: 200,
-              color: Colors.grey[200],
-              child: Center(
-                child: Icon(Icons.qr_code, size: 100, color: Colors.grey),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              Text(
+                "Quét mã QR để nhận tiền",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Địa chỉ ví của bạn:",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            SelectableText(
-              "0x123...abc",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                // Xử lý sao chép địa chỉ ví
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              SizedBox(height: 16),
+              Container(
+                height: 200,
+                width: 200,
+                color: Colors.grey[200],
+                child: Center(
+                  child: Icon(Icons.qr_code, size: 100, color: Colors.grey),
                 ),
               ),
-              child: Text(
-                "Sao chép địa chỉ",
-                style: TextStyle(fontSize: 18, color: Colors.white),
+              SizedBox(height: 16),
+              Text(
+                "Địa chỉ ví của bạn:",
+                style: TextStyle(fontSize: 16),
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              SelectableText(
+                "0x123...abc",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  // Sao chép nội dung của SelectableText vào Clipboard
+                  Clipboard.setData(ClipboardData(text: "0x123...abc"));
+                  // Hiển thị thông báo đã sao chép thành công
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Địa chỉ đã được sao chép!')),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40), // Tăng kích thước nút
+                  backgroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12), // Bo góc mềm mại hơn
+                  ),
+                  elevation: 5, // Hiệu ứng đổ bóng
+                ),
+                child: Text(
+                  "Sao chép địa chỉ",
+                  style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -843,9 +853,9 @@ class SwapScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
-                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
-                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                DropdownMenuItem(value: "ETH", child: Text("ETH")),
+                DropdownMenuItem(value: "USDT", child: Text("USDT")),
+                DropdownMenuItem(value: "BTC", child: Text("BTC")),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -865,9 +875,9 @@ class SwapScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
-                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
-                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                DropdownMenuItem(value: "ETH", child: Text("ETH")),
+                DropdownMenuItem(value: "USDT", child: Text("USDT")),
+                DropdownMenuItem(value: "BTC", child: Text("BTC")),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -936,9 +946,9 @@ class Sw extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
-                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
-                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                DropdownMenuItem(value: "ETH", child: Text("ETH")),
+                DropdownMenuItem(value: "USDT", child: Text("USDT")),
+                DropdownMenuItem(value: "BTC", child: Text("BTC")),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -958,9 +968,9 @@ class Sw extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
-                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
-                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
+                DropdownMenuItem(value: "ETH", child: Text("ETH")),
+                DropdownMenuItem(value: "USDT", child: Text("USDT")),
+                DropdownMenuItem(value: "BTC", child: Text("BTC")),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -1029,8 +1039,8 @@ class BuyAndSellScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(child: Text("Mua"), value: "buy"),
-                DropdownMenuItem(child: Text("Bán"), value: "sell"),
+                DropdownMenuItem(value: "buy", child: Text("Mua")),
+                DropdownMenuItem(value: "sell", child: Text("Bán")),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại giao dịch

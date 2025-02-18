@@ -1,4 +1,4 @@
-name: dmm
+name: wallet
 description: hệ thống quản lý ví tiền mã hoá
 
 publish_to: 'none'
@@ -6,14 +6,18 @@ publish_to: 'none'
 version: 0.0.1+1
 
 environment:
-  sdk: ^3.1.1
+  sdk: ^3.6.0
+  flutter: ^3.2.0
 
 dependencies:
   flutter:
     sdk: flutter
-
-  english_words: ^4.0.0
   provider: ^6.0.0
+  web3dart: ^2.3.0
+  http: ^0.13.6
+  english_words: ^4.0.0
+  mockito: ^5.0.0
+  mongo_dart: ^0.9.4
 
 dev_dependencies:
   flutter_test:
