@@ -27,9 +27,3 @@ class WalletModel {
   String? get getAddress => address;
   String? get getPrivateKey => privateKey;
 }
-
-class WalletListModel {
-  final List<WalletModel>? wallets;
-
-  WalletListModel({this.wallets});
-}
