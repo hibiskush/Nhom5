@@ -1,12 +1,39 @@
-import 'package:flutter/material.dart';
-import 'package:dmm/widgets/token_card.dart';
 import 'package:flutter/services.dart';
+import 'package:wallet/providers/ethereum_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:wallet/utils/format.dart';
+import 'package:wallet/widgets/token_card.dart';
+import 'package:provider/provider.dart';
 
+class HomeScreen extends StatefulWidget {
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
 
+class HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+      ethereumProvider.fetchBalance();
+      ethereumProvider.fetchPriceChange();
+      ethereumProvider.startAutoUpdateBalance();
+    });
+  }
 
-class HomeScreen extends StatelessWidget {
+  @override
+  void dispose() {
+    final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+    ethereumProvider.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ethereumProvider = Provider.of<EthereumProvider>(context);
+    
     return Column(
       children: [
         Container(
@@ -14,19 +41,21 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              Text(
-                '\$1,573.00',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              ethereumProvider.isLoading
+                  ? CircularProgressIndicator()
+                  : ethereumProvider.walletModel?.getBalance != null
+                      ? Text(
+                          '\$${ethereumProvider.walletModel?.getBalance.toStringAsFixed(2)}',
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                        )
+                      : Text('NaN'),
               SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '+\$127.50',
+                    ethereumProvider.balanceChange?.toStringAsFixed(2) ?? "NaN",
                     style: TextStyle(
                       fontSize: 16,
                       color: const Color.fromARGB(255, 0, 0, 0),
@@ -34,10 +63,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    '(+1.02%)',
+                    '(${ethereumProvider.priceChange?.toStringAsFixed(2) ?? "NaN"}%)',
                     style: TextStyle(
                       fontSize: 16,
-                      color: const Color.fromARGB(255, 138, 252, 142),
+                      color: ethereumProvider.priceChange! > 0
+                          ? const Color.fromARGB(255, 0, 200, 0)
+                          : const Color.fromARGB(255, 200, 0, 0),
                       backgroundColor: const Color.fromARGB(255, 215, 215, 215),
                     ),
                   ),
@@ -45,150 +76,154 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    // Nút Nhận
-    Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ReceiveScreen()),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[100],
-              shape: BoxShape.circle,
-            ),
-            padding: EdgeInsets.all(12), // Kích thước padding cân bằng
-            child: Icon(
-              Icons.arrow_downward,
-              color: Colors.orange,
-              size: 24, // Kích thước icon nhỏ hơn
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Nhận',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    ),
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Nút Nhận
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReceiveScreen()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange[100],
+                            shape: BoxShape.circle,
+                          ),
+                          padding:
+                              EdgeInsets.all(12), // Kích thước padding cân bằng
+                          child: Icon(
+                            Icons.arrow_downward,
+                            color: Colors.orange,
+                            size: 24, // Kích thước icon nhỏ hơn
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Nhận',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
 
-    // Nút Gửi
-    Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SendScreen()),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[100],
-              shape: BoxShape.circle,
-            ),
-            padding: EdgeInsets.all(12),
-            child: Icon(
-              Icons.arrow_upward,
-              color: Colors.orange,
-              size: 24,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Gửi',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    ),
+                  // Nút Gửi
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SendScreen()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange[100],
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.arrow_upward,
+                            color: Colors.orange,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Gửi',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
 
-    // Nút Đổi
-    Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SwapScreen()),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[100],
-              shape: BoxShape.circle,
-            ),
-            padding: EdgeInsets.all(12),
-            child: Icon(
-              Icons.swap_horiz,
-              color: Colors.orange,
-              size: 24,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Đổi',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    ),
+                  // Nút Đổi
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SwapScreen()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange[100],
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.swap_horiz,
+                            color: Colors.orange,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Đổi',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
 
-    // Nút Mua
-    Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BuyAndSellScreen()),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[100],
-              shape: BoxShape.circle,
-            ),
-            padding: EdgeInsets.all(12),
-            child: Icon(
-              Icons.shopping_cart,
-              color: Colors.orange,
-              size: 24,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Mua',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    ),
-  ],
-),
-
+                  // Nút Mua
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BuyAndSellScreen()),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange[100],
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.shopping_cart,
+                            color: Colors.orange,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Mua',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -199,9 +234,9 @@ class HomeScreen extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.all(16.0),
               children: [
-                TokenCard(tokenName: 'Solana', balance: '5.4', price: '23.00'),
-                TokenCard(tokenName: 'Ethereum', balance: '0.8', price: '1,550.00'),
-                TokenCard(tokenName: 'USDT', balance: '127.5', price: '1.00'),
+                TokenCard(tokenName: 'Ethereum', balance: "${ethereumProvider.walletModel?.getEtherAmount}", price: "${ethereumProvider.walletModel?.getBalance.toStringAsFixed(2)}"),
+                // TokenCard(tokenName: 'Solana', balance: '5.4', price: '23.00'),
+                // TokenCard(tokenName: 'USDT', balance: '127.5', price: '1.00'),
               ],
             ),
           ),
@@ -304,33 +339,284 @@ class CollectionScreen extends StatelessWidget {
   }
 }
 
-class HistoryScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> transactions = [
-    {
-      "type": "Gửi",
-      "amount": "1.2 ETH",
-      "address": "0x123...abc",
-      "date": "2023-12-01",
-      "status": "Thành công",
-    },
-    {
-      "type": "Nhận",
-      "amount": "0.8 BTC",
-      "address": "0x456...def",
-      "date": "2023-11-28",
-      "status": "Thành công",
-    },
-    {
-      "type": "Swap",
-      "amount": "2.5 USDT",
-      "address": "0x789...ghi",
-      "date": "2023-11-25",
-      "status": "Thất bại",
-    },
-  ];
+class SendScreen extends StatefulWidget {
+  @override
+  SendScreenState createState() => SendScreenState();
+}
+
+class SendScreenState extends State<SendScreen> {
+  final List<String> tokens = ["Solana", "Ethereum", "USDT"];
+  String selectedToken = "Ethereum";
+  TextEditingController amountController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  double transactionFee = 0.0;
+
+  bool isValidInput() {
+    if (amountController.text.isEmpty || addressController.text.isEmpty) {
+      return false;
+    }
+
+    if (double.tryParse(amountController.text) == null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+      ethereumProvider.fetchBalance();
+      ethereumProvider.fetchPriceChange();
+      ethereumProvider.startAutoUpdateBalance();
+    });
+  }
+
+  @override
+  void dispose() {
+    final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+    ethereumProvider.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ethereumProvider = Provider.of<EthereumProvider>(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Gửi tiền mã hóa"),
+        centerTitle: true,
+        backgroundColor: Colors.orange,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Số dư: ${ethereumProvider.walletModel?.getEtherAmount} ETH", 
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+            ),
+            Text(
+              "Chọn loại tiền",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: selectedToken,
+                icon: Icon(Icons.arrow_drop_down, color: Colors.orange),
+                underline: SizedBox(),
+                items: tokens.map((String token) {
+                  return DropdownMenuItem<String>(
+                    value: token,
+                    child: Text(token),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedToken = newValue!;
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "Địa chỉ ví nhận",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: addressController,
+                    decoration: InputDecoration(
+                      hintText: "Nhập địa chỉ ví hoặc quét mã QR",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onChanged: (_) {
+                      if (isValidInput()) {
+                        ethereumProvider.fetchGasFee(addressController.text, double.parse(amountController.text));
+                        transactionFee = ethereumProvider.gasFee;
+                      } else {
+                        setState(() {
+                          transactionFee = 0.0;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.qr_code_scanner, color: Colors.orange),
+                  onPressed: () {
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            Text(
+              "Số lượng gửi",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            TextField(
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: "Nhập số lượng tiền mã hóa",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (_) {
+                if (isValidInput()) {
+                  ethereumProvider.fetchGasFee(addressController.text, double.parse(amountController.text));
+                  transactionFee = ethereumProvider.gasFee;
+                } else {
+                  setState(() {
+                    transactionFee = 0.0;
+                  });
+                }
+              },
+            ),
+            SizedBox(height: 16),
+            Text(
+              "Chi phí giao dịch: $transactionFee ETH",
+              style: TextStyle(color: Colors.grey),
+            ),
+            Divider(),
+            SizedBox(height: 16),
+            Text(
+              "Chi tiết giao dịch",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Loại tiền: $selectedToken",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Ví nhận: ${addressController.text.isEmpty ? 'Chưa nhập' : AddressFormat.formatAddress(addressController.text)}",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Số lượng: ${amountController.text.isEmpty ? 'Chưa nhập' : amountController.text} $selectedToken",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Chi phí giao dịch: $transactionFee ETH",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                if (isValidInput()) {
+                  ethereumProvider.sendTransaction(addressController.text, double.parse(amountController.text));
+                  amountController.clear();
+                  addressController.clear();
+                  setState(() {
+                    transactionFee = 0.0;
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Giao dịch thành công"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "Gửi ngay",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HistoryScreen extends StatefulWidget {
+  @override
+  State<HistoryScreen> createState() => HistoryScreenState();
+}
+
+class HistoryScreenState extends State<HistoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+      ethereumProvider.startAutoUpdateBalance();
+      ethereumProvider.loadTransactions();
+    });
+  }
+
+  @override
+  void dispose() {
+    final ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+    ethereumProvider.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ethereumProvider = Provider.of<EthereumProvider>(context);
+    final List<Map<String, dynamic>> transactions = [];
+    for (var transaction in ethereumProvider.transactions) {
+      transactions.add({
+        "type": transaction.from!.getAddress == ethereumProvider.walletModel!.getAddress
+            ? "Gửi"
+            : "Nhận",
+        "amount": transaction.amount,
+        "address": AddressFormat.formatAddress(transaction.to!.getAddress!),
+        "date": transaction.date,
+        "status": "Thành công",
+      });
+    }
+
+    transactions.sort((a, b) => b["date"].compareTo(a["date"]));
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -366,7 +652,7 @@ class HistoryScreen extends StatelessWidget {
                 ),
               ),
               title: Text(
-                "${transaction["type"]} ${transaction["amount"]}",
+                "${transaction["type"]} ${transaction["amount"]} ETH",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
@@ -461,7 +747,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingTokens() {
-    return SizedBox(
+    return Container(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -474,10 +760,12 @@ class LastScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.blueAccent,
-                  child: Icon(Icons.currency_pound_outlined, color: Colors.white),
+                  child:
+                      Icon(Icons.currency_pound_outlined, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text('Token ${index + 1}', style: TextStyle(fontWeight: FontWeight.w500)),
+                Text('Token ${index + 1}',
+                    style: TextStyle(fontWeight: FontWeight.w500)),
               ],
             ),
           );
@@ -487,7 +775,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingSites() {
-    return SizedBox(
+    return Container(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -503,7 +791,8 @@ class LastScreen extends StatelessWidget {
                   child: Icon(Icons.web, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text('Site ${index + 1}', style: TextStyle(fontWeight: FontWeight.w500)),
+                Text('Site ${index + 1}',
+                    style: TextStyle(fontWeight: FontWeight.w500)),
               ],
             ),
           );
@@ -513,7 +802,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildTrendingCollections() {
-    return SizedBox(
+    return Container(
       height: 150,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -529,7 +818,8 @@ class LastScreen extends StatelessWidget {
                   child: Icon(Icons.collections, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text('Collection ${index + 1}', style: TextStyle(fontWeight: FontWeight.w500)),
+                Text('Collection ${index + 1}',
+                    style: TextStyle(fontWeight: FontWeight.w500)),
               ],
             ),
           );
@@ -539,7 +829,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildLearn() {
-    return SizedBox(
+    return Container(
       height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -570,7 +860,7 @@ class LastScreen extends StatelessWidget {
   }
 
   Widget _buildQuest() {
-    return SizedBox(
+    return Container(
       height: 120,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -601,171 +891,15 @@ class LastScreen extends StatelessWidget {
   }
 }
 
-class SendScreen extends StatelessWidget {
-  final List<String> tokens = ["Solana", "Ethereum", "USDT"]; // Danh sách các loại tiền mã hóa có sẵn
-
+class ReceiveScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    String selectedToken = tokens[0]; // Loại tiền mặc định được chọn
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("Gửi tiền mã hóa"),
-            centerTitle: true,
-            backgroundColor: Colors.orange,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Chọn loại tiền",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[300]!),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedToken,
-                    icon: Icon(Icons.arrow_drop_down, color: Colors.orange),
-                    underline: SizedBox(),
-                    items: tokens.map((String token) {
-                      return DropdownMenuItem<String>(
-                        value: token,
-                        child: Text(token),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedToken = newValue!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "Địa chỉ ví nhận",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Nhập địa chỉ ví hoặc quét mã QR",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(Icons.qr_code_scanner, color: Colors.orange),
-                      onPressed: () {
-                        // Xử lý quét mã QR
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "Số lượng gửi",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Nhập số lượng tiền mã hóa",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  "Chi phí giao dịch: 0.001 ETH",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Divider(),
-                SizedBox(height: 16),
-                Text(
-                  "Chi tiết giao dịch",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Loại tiền: $selectedToken",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Ví nhận: 0x123...abc",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Số lượng: 1.5 $selectedToken",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Chi phí giao dịch: 0.001 ETH",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    // Xử lý gửi tiền
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Gửi ngay",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  State<ReceiveScreen> createState() => _ReceiveScreenState();
 }
 
-class ReceiveScreen extends StatelessWidget {
+class _ReceiveScreenState extends State<ReceiveScreen> {
   @override
   Widget build(BuildContext context) {
+    final ethereumProvider = Provider.of<EthereumProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Nhận tiền mã hóa"),
@@ -799,14 +933,14 @@ class ReceiveScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
               SelectableText(
-                "0x123...abc",
+                AddressFormat.formatAddress(ethereumProvider.walletModel!.getAddress!),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
               Spacer(),
               ElevatedButton(
                 onPressed: () {
                   // Sao chép nội dung của SelectableText vào Clipboard
-                  Clipboard.setData(ClipboardData(text: "0x123...abc"));
+                  Clipboard.setData(ClipboardData(text: ethereumProvider.walletModel!.getAddress!));
                   // Hiển thị thông báo đã sao chép thành công
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Địa chỉ đã được sao chép!')),
@@ -832,6 +966,7 @@ class ReceiveScreen extends StatelessWidget {
     );
   }
 }
+
 class SwapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -853,9 +988,9 @@ class SwapScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(value: "ETH", child: Text("ETH")),
-                DropdownMenuItem(value: "USDT", child: Text("USDT")),
-                DropdownMenuItem(value: "BTC", child: Text("BTC")),
+                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
+                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
+                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -875,9 +1010,9 @@ class SwapScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(value: "ETH", child: Text("ETH")),
-                DropdownMenuItem(value: "USDT", child: Text("USDT")),
-                DropdownMenuItem(value: "BTC", child: Text("BTC")),
+                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
+                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
+                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -946,9 +1081,9 @@ class Sw extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(value: "ETH", child: Text("ETH")),
-                DropdownMenuItem(value: "USDT", child: Text("USDT")),
-                DropdownMenuItem(value: "BTC", child: Text("BTC")),
+                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
+                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
+                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -968,9 +1103,9 @@ class Sw extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(value: "ETH", child: Text("ETH")),
-                DropdownMenuItem(value: "USDT", child: Text("USDT")),
-                DropdownMenuItem(value: "BTC", child: Text("BTC")),
+                DropdownMenuItem(child: Text("ETH"), value: "ETH"),
+                DropdownMenuItem(child: Text("USDT"), value: "USDT"),
+                DropdownMenuItem(child: Text("BTC"), value: "BTC"),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại tiền
@@ -1039,8 +1174,8 @@ class BuyAndSellScreen extends StatelessWidget {
             SizedBox(height: 8),
             DropdownButtonFormField(
               items: [
-                DropdownMenuItem(value: "buy", child: Text("Mua")),
-                DropdownMenuItem(value: "sell", child: Text("Bán")),
+                DropdownMenuItem(child: Text("Mua"), value: "buy"),
+                DropdownMenuItem(child: Text("Bán"), value: "sell"),
               ],
               onChanged: (value) {
                 // Xử lý chọn loại giao dịch

@@ -1,5 +1,8 @@
+import 'package:provider/provider.dart';
+import 'package:wallet/providers/ethereum_provider.dart';
 import 'package:wallet/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/utils/format.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -18,8 +21,12 @@ class _HomePageState extends State<HomePage> {
     LastScreen()
   ];
 
+
   @override
   Widget build(BuildContext context) {
+    final ethereumProvider = Provider.of<EthereumProvider>(context);
+    var address = ethereumProvider.walletModel!.getAddress!;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -115,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      '0x123...abc',
+                      AddressFormat.formatAddress(address),
                       style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],

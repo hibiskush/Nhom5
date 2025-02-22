@@ -4,15 +4,18 @@ import 'home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final String _correctPassword = "admin123";
+  final FocusNode _passwordFocusNode = FocusNode();
   String _errorMessage = "";
 
   void _login() {
+    _passwordFocusNode.unfocus();
+
     if (_passwordController.text == _correctPassword) {
       Navigator.push(
         context,
