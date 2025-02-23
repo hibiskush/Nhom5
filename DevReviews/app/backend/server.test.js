@@ -1,8 +1,9 @@
 const supertest = require('supertest');
 const { MongoClient } = require('mongodb');
 const app = require('./server'); 
+require('dotenv').config({ path: '../assets/.env' });
 
-const testConnectionString = 'mongodb+srv://ngn:123@cluster0.ilq9j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const testConnectionString = process.env.MONGO_DB_CONNECTION_STRING;
 
 let db;
 let request;
