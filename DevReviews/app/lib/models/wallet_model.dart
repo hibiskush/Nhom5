@@ -5,7 +5,6 @@ class WalletModel {
   late String? address;
   double balance = 0.0;
   double etherAmount = 0.0;
-
   
   WalletModel({this.privateKey, String? publicKey}) {
     if (privateKey != null) {
@@ -24,6 +23,6 @@ class WalletModel {
   double get getEtherAmount => etherAmount;
   set setEtherAmount(double value) => etherAmount = value;
 
-  String? get getAddress => address;
-  String? get getPrivateKey => privateKey;
+  String get getAddress => address ?? 'unknown';
+  String get getPrivateKey => privateKey ?? 'unknown';
 }

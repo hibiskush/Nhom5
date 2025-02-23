@@ -1,9 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/providers/ethereum_provider.dart';
-import 'package:wallet/screens/screens.dart';
-import 'package:flutter/material.dart';
 import 'package:wallet/utils/format.dart';
-
+import 'package:wallet/screens/nav/_nav.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,21 +10,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late EthereumProvider ethereumProvider;
   int _currentIndex = 0;
+  String network = 'Ethereum';
 
   final List<Widget> _pages = [
     HomeScreen(),
     CollectionScreen(),
-    SwapScreen(),
     HistoryScreen(),
     LastScreen()
   ];
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ethereumProvider = Provider.of<EthereumProvider>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ethereumProvider.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ethereumProvider = Provider.of<EthereumProvider>(context);
-    var address = ethereumProvider.walletModel!.getAddress!;
+    var address = ethereumProvider.walletModel!.getAddress;
+    List<ListTile> wallets = [];
+    for (var i = 0; i < ethereumProvider.wallets.length; i++) {
+      wallets.add(
+        ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.orange[100],
+            child: Icon(Icons.account_balance_wallet, color: Colors.orange),
+          ),
+          title: Text('Ví ${i + 1}'),
+          subtitle: Text(AddressFormat.formatAddress(ethereumProvider.wallets[i].address ?? '0x123...789')),
+          onTap: () {
+            ethereumProvider.switchWallet(i);
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
+
+    wallets.add(
+      ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.green[100],
+          child: Icon(Icons.add, color: Colors.green),
+        ),
+        title: Text('Tạo ví mới'),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -55,41 +95,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Column(
                             children: [
-                              ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.orange[100],
-                                  child: Icon(Icons.account_balance_wallet, color: Colors.orange),
-                                ),
-                                title: Text('Ví 1'),
-                                subtitle: Text('0x123...abc'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.orange[100],
-                                  child: Icon(Icons.account_balance_wallet, color: Colors.orange),
-                                ),
-                                title: Text('Ví 2'),
-                                subtitle: Text('0x456...def'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.green[100],
-                                  child: Icon(Icons.add, color: Colors.green),
-                                ),
-                                title: Text('Tạo ví mới'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
+                              ...wallets,
                               Divider(),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.edit, color: Colors.blue),
@@ -119,13 +129,33 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       'Ví của tôi',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     Text(
                       AddressFormat.formatAddress(address),
                       style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                DropdownButton<String>(
+                  value: network,
+                  items: ['Ethereum', 'Solana', 'Polygon'].map((String choice) {
+                    return DropdownMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        network = newValue;
+                      });
+                    }
+                  },
                 ),
                 Spacer(),
                 IconButton(
@@ -170,10 +200,6 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.grid_view),
             label: 'Bộ sưu tập',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.swap_horiz),
-            label: 'Swap',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
