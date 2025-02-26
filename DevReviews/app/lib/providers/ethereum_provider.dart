@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:wallet/services/blockchain_services.dart';
-import 'package:wallet/services/coingecko_services.dart';
+import 'package:wallet/services/blockchain_service.dart';
+import 'package:wallet/services/coingecko_service.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/services/transaction_service.dart';
 import 'package:web3dart/web3dart.dart';
